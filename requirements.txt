@@ -35,3 +35,4 @@ typing_extensions==4.12.2
 tzdata==2024.2
 uno==0.3.3
 Werkzeug==3.0.6
+gunicorn
