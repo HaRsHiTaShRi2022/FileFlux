@@ -74,7 +74,10 @@ def word_to_pdf():
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             word_file.save(word_path)
 
-            subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
+            LIBREOFFICE_PATH = "libreoffice"
+
+            subprocess.run([LIBREOFFICE_PATH, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
+
 
             pdf_paths.append(output_path)
             word_paths.append(word_path)
@@ -250,7 +253,8 @@ def ppt_to_pdf():
             ppt_path = os.path.join(UPLOAD_FOLDER, ppt_file.filename)
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             ppt_file.save(ppt_path)
-            subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, ppt_path], check=True)
+            subprocess.run([LIBREOFFICE_PATH, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, ppt_path], check=True)
+
 
             ppt_paths.append(ppt_path)
             pdf_paths.append(output_path)
