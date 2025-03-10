@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILE-FLUX - Convert Files Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('home')}}"><div class="logo"><span>FILE-</span>FLUX</div></a>
+    <nav class="nav-links">
+        <a href="#weare">About Us</a>
+    </nav>
+</header>
+    <main>
+        <section class="hero">
+            <h1>Convert your files</h1>
+            <p>Seamlessly and easily online</p>
+            <div class="converter-box">
+                <div class="upload-container">
+    <button class="upload-btn" id="uploadBtn">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 1V15M10 1L5 6M10 1L15 6" stroke="white" stroke-width="2"/>
+            <path d="M1 15V17C1 18.1046 1.89543 19 3 19H17C18.1046 19 19 18.1046 19 17V15" stroke="white" stroke-width="2"/>
+        </svg>
+        UPLOAD FILES
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 4L6 8L10 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <div class="dropdown-menu" id="uploadDropdown">
+        <div class="dropdown-item">From Device</div>
+        <div class="dropdown-item">From Google Drive</div>
+        <div class="dropdown-item">From OneDrive</div>
+        <div class="dropdown-item">From Dropbox</div>
+        <div class="dropdown-item">From a link/URL</div>
+    </div>
+</div>
+                <div class="tool-selector">
+                    <p>Select a tool:</p>
+                    <div class="select-btn" id="selectBtn">
+                        Select
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="tool-dropdown" id="toolDropdown">
+                        <div class="tool-item">Word to PDF</div>
+                        <div class="tool-item">PPT to PDF</div>
+                        <div class="tool-item">Image to PDF</div>
+                        <div class="tool-item">PDF to Word</div>
+                        <div class="tool-item">JSON to Excel</div>
+                        <div class="tool-item">Excel to JSON</div>
+                    </div>
+                </div>
+                <button class="convert-btn">CONVERT</button>
+            </div>
+        </section>
+    </main>
+
+    <footer id="foot">
+        <div class="footer-logo">
+            <div class="logo">
+                <span>FILE-<span style="color: #ff8c00;">FLUX</span></span>
+            </div>
+            <p>You give we Convert</p>
+            <div class="email">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="4" width="16" height="12" rx="1" stroke="#555" stroke-width="1.5"/>
+                    <path d="M2 6L10 10L18 6" stroke="#555" stroke-width="1.5"/>
+                </svg>
+                hi@fileflux.com
+            </div>
+        </div>
+        <div class="footer-col">
+            <h3>Services</h3>
+            <p>Word to PDF</p>
+            <p>PDF to Word</p>
+            <p>PPT to PDF</p>
+            <p>JSON to Excel</p>
+            <p>Excel to JASON</p>
+            <p>Image to PDF</p>
+        </div>
+        <div class="footer-col">
+            <h3>About US</h3>
+            <a href="{{ url_for('About')}}">Our Mission</a>
+            <a href="{{ url_for('Deves')}}">Team</a>
+        </div>
+        <div class="footer-col">
+            <h3>Contact</h3>
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+        </div>
+        <div class="footer-col">
+            <h3>Help</h3>
+            <a href="mailto:">Contact us</a>
+        </div>
+    </footer>
+
+     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILE-FLUX - About the Devs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Deves.css') }}">
+</head>
+<body>
+    <header>
+    <a href="{{ url_for('home')}}"><div class="logo"><span>FILE-</span>FLUX</div></a>
+    <nav class="nav-links">
+        <a href="#weare">About Us</a>
+    </nav>
+</header>
+    
+    <main>
+        <section class="about-devs">
+            <h1 class="section-title">About the Devs</h1>
+            <div class="dev-profiles">
+                <div class="dev-profile left-image">
+                    <div class="dev-image">
+                        <div class="image-placeholder"><img src="{{ url_for('static', filename='images/Harshit.jpg') }}" alt="Mukund Joshi" ></div>
+                    </div>
+                    <div class="dev-info">
+                        <h2>Harshit Ashri</h2>
+                        <p>I am a web developer and AI enthusiast with a passion for building intelligent and user-friendly solutions. I specialize in creating seamless digital experiences using Python, Flask, and machine learning while developing innovative web applications. My work bridges technology and practicality, delivering both functional and AI-powered solutions.</p>
+                        <a href="https://www.linkedin.com/in/harshit-ashri-046209209/">Connet me on LinkedIN</a>
+                    </div>
+                </div>
+
+                <div class="dev-profile right-image">
+                    <div class="dev-info">
+                        <h2>Mukund Joshi</h2>
+                        <p>I am a B.Tech student specializing in IT, set to graduate in a year. Passionate about research and innovation, I enjoy working on impactful projects. With a strong foundation in full-stack development, I aim to further my expertise through a master's in CS/IT. Always eager to learn, I thrive in collaborative and challenging environments.</p>
+                        <a href="http://www.linkedin.com/in/mukund-joshi-58672b267">Connet me on LinkedIN</a>
+                    </div>
+                    <div class="dev-image">
+                        <div class="image-placeholder"><img src="{{ url_for('static', filename='images/Mukund.jpg') }}" alt="Mukund Joshi" ></div>
+                    </div>
+                </div>
+
+                <div class="dev-profile left-image">
+                    <div class="dev-image">
+                        <div class="image-placeholder"><img src="{{ url_for('static', filename='images/Anwesh.jpg') }}" alt="Anwesh Dash" ></div>
+                    </div>
+                    <div class="dev-info">
+                        <h2>Anwesh Ajitabh Dash</h2>
+                        <p>I am a UI/UX designer and mechanical engineer with a passion for blending form and function. I specialize in creating intuitive digital experiences while engineering innovative mechanical solutions. My work bridges the gap between design and technology, delivering both user-friendly interfaces and precision-engineered products.</p>
+                        <a href="https://www.linkedin.com/in/anweshdash16">Connet me on LinkedIN</a>
+                    </div>
+                </div>
+
+                <div class="dev-profile right-image">
+                    <div class="dev-info">
+                        <h2>PRATEEK HOTA</h2>
+                        <p>I am a mechanical engineer and UI/UX designer with a strong passion for integrating aesthetics with functionality. I focus on crafting seamless digital experiences while developing innovative mechanical solutions. My expertise lies in merging design and technology to create user-friendly interfaces and precisely engineered products.</p>
+                        <a href="https://www.linkedin.com/in/prateek-hota/">Connet me on LinkedIN</a>
+                    </div>
+                    <div class="dev-image">
+                        <div class="image-placeholder"><img src="{{ url_for('static', filename='images/hota.jpg') }}" alt="Anwesh Dash" ></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer id="foot">
+        <div class="footer-logo">
+            <div class="logo">
+                <span>FILE-<span style="color: #ff8c00;">FLUX</span></span>
+            </div>
+            <p>You give we Convert</p>
+            <div class="email">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="4" width="16" height="12" rx="1" stroke="#555" stroke-width="1.5"/>
+                    <path d="M2 6L10 10L18 6" stroke="#555" stroke-width="1.5"/>
+                </svg>
+                hi@fileflux.com
+            </div>
+        </div>
+        <div class="footer-col">
+            <h3>Services</h3>
+            <p>Word to PDF</p>
+            <p>PDF to Word</p>
+            <p>PPT to PDF</p>
+            <p>JSON to Excel</p>
+            <p>Excel to JASON</p>
+            <p>Image to PDF</p>
+        </div>
+        <div class="footer-col">
+            <h3>About US</h3>
+            <a href="{{ url_for('About')}}">Our Mission</a>
+            <a href="{{ url_for('Deves')}}">Team</a>
+        </div>
+        <div class="footer-col">
+            <h4>Contribute to Our github repository</h4>
+            <h3><a href="https://github.com/HaRsHiTaShRi2022?tab=repositories">GitHub</a></h3>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/Deves.js') }}"></script>
+</body>
+</html>
