@@ -11,6 +11,7 @@ import time
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 UPLOAD_FOLDER = "uploads"
+LIBREOFFICE_PATH = "/usr/bin/libreoffice" 
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -74,10 +75,27 @@ def word_to_pdf():
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             word_file.save(word_path)
 
-            LIBREOFFICE_PATH = "libreoffice"
+            # Check if LibreOffice exists
+            if not os.path.exists(LIBREOFFICE_PATH):
+                alternative_paths = [
+                    "libreoffice",
+                    "/usr/local/bin/libreoffice",
+                    "/opt/libreoffice/program/soffice"
+                ]
+                for path in alternative_paths:
+                    try:
+                        subprocess.run([path, "--version"], check=True, capture_output=True)
+                        print(f"Found LibreOffice at: {path}")
+                        libreoffice_executable = path
+                        break
+                    except (subprocess.SubprocessError, FileNotFoundError):
+                        continue
+                else:
+                    return "LibreOffice not found. Please install it on the server.", 500
+            else:
+                libreoffice_executable = LIBREOFFICE_PATH
 
-            subprocess.run([LIBREOFFICE_PATH, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
-
+            subprocess.run([libreoffice_executable, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
 
             pdf_paths.append(output_path)
             word_paths.append(word_path)
@@ -253,8 +271,28 @@ def ppt_to_pdf():
             ppt_path = os.path.join(UPLOAD_FOLDER, ppt_file.filename)
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             ppt_file.save(ppt_path)
-            subprocess.run([LIBREOFFICE_PATH, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, ppt_path], check=True)
-
+            
+            # Check if LibreOffice exists - same code as in word-to-pdf for consistency
+            if not os.path.exists(LIBREOFFICE_PATH):
+                alternative_paths = [
+                    "libreoffice",
+                    "/usr/local/bin/libreoffice",
+                    "/opt/libreoffice/program/soffice"
+                ]
+                for path in alternative_paths:
+                    try:
+                        subprocess.run([path, "--version"], check=True, capture_output=True)
+                        print(f"Found LibreOffice at: {path}")
+                        libreoffice_executable = path
+                        break
+                    except (subprocess.SubprocessError, FileNotFoundError):
+                        continue
+                else:
+                    return "LibreOffice not found. Please install it on the server.", 500
+            else:
+                libreoffice_executable = LIBREOFFICE_PATH
+                
+            subprocess.run([libreoffice_executable, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, ppt_path], check=True)
 
             ppt_paths.append(ppt_path)
             pdf_paths.append(output_path)
