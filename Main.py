@@ -4,7 +4,6 @@ import pandas as pd
 from PIL import Image
 from flask import Flask, request, send_file, jsonify, render_template, after_this_request
 from pdf2docx import Converter
-from docx2pdf import convert
 import subprocess
 import zipfile
 import json
@@ -54,10 +53,6 @@ def About():
     return render_template('About.html')
 
 
-import pythoncom  # Add this at the top
-from docx2pdf import convert
-
-
 @app.route('/word-to-pdf', methods=['POST'])
 def word_to_pdf():
     try:
@@ -79,7 +74,8 @@ def word_to_pdf():
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             word_file.save(word_path)
 
-            convert(word_path, output_path)  # Convert to PDF
+            # Use LibreOffice for conversion instead of docx2pdf
+            subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
 
             pdf_paths.append(output_path)
             word_paths.append(word_path)
