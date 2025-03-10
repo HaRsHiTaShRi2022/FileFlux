@@ -61,7 +61,6 @@ from docx2pdf import convert
 @app.route('/word-to-pdf', methods=['POST'])
 def word_to_pdf():
     try:
-        pythoncom.CoInitialize()  # Initialize COM for Windows
         if 'file' not in request.files:
             return "No file uploaded", 400
         files = request.files.getlist('file')
@@ -85,17 +84,13 @@ def word_to_pdf():
             pdf_paths.append(output_path)
             word_paths.append(word_path)
 
-        # If only one file, return directly
         if len(pdf_paths) == 1:
             @after_this_request
             def remove_file(response):
                 delete_files(word_paths[0], pdf_paths[0])
                 return response
+            return send_file(pdf_paths[0], as_attachment=True, download_name=f"{filename}.pdf")
 
-            return send_file(pdf_paths[0], as_attachment=True,
-                             download_name=f"{os.path.splitext(files[0].filename)[0]}.pdf")
-
-        # If multiple files, zip them
         zip_path = os.path.join(UPLOAD_FOLDER, "converted_documents.zip")
         with zipfile.ZipFile(zip_path, 'w') as zipf:
             for pdf_path in pdf_paths:
@@ -103,10 +98,8 @@ def word_to_pdf():
 
         @after_this_request
         def remove_files(response):
-            all_files = word_paths + pdf_paths + [zip_path]
-            delete_files(*all_files)
+            delete_files(*word_paths, *pdf_paths, zip_path)
             return response
-
         return send_file(zip_path, as_attachment=True, download_name="converted_documents.zip")
 
     except Exception as e:
@@ -250,29 +243,29 @@ def ppt_to_pdf():
         files = request.files.getlist('file')
         if not files or files[0].filename == '':
             return "No selected files", 400
+
         ppt_paths = []
         pdf_paths = []
+
         for ppt_file in files:
             filename, ext = os.path.splitext(ppt_file.filename)
             if ext.lower() not in ['.ppt', '.pptx']:
                 return f"Invalid file format for {ppt_file.filename}. Please upload only PowerPoint files", 400
+
             ppt_path = os.path.join(UPLOAD_FOLDER, ppt_file.filename)
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             ppt_file.save(ppt_path)
-            LIBREOFFICE_PATH = r"C:\Program Files\LibreOffice\program\soffice.exe"
-            subprocess.run([
-                LIBREOFFICE_PATH, "--headless", "--convert-to", "pdf",
-                "--outdir", UPLOAD_FOLDER, ppt_path
-            ], check=True)
+            subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, ppt_path], check=True)
+
             ppt_paths.append(ppt_path)
             pdf_paths.append(output_path)
+
         if len(pdf_paths) == 1:
             @after_this_request
             def remove_file(response):
                 delete_files(ppt_paths[0], pdf_paths[0])
                 return response
-            return send_file(pdf_paths[0], as_attachment=True,
-                             download_name=f"{os.path.splitext(files[0].filename)[0]}.pdf")
+            return send_file(pdf_paths[0], as_attachment=True, download_name=f"{filename}.pdf")
 
         zip_path = os.path.join(UPLOAD_FOLDER, "converted_presentations.zip")
         with zipfile.ZipFile(zip_path, 'w') as zipf:
@@ -281,10 +274,10 @@ def ppt_to_pdf():
 
         @after_this_request
         def remove_files(response):
-            all_files = ppt_paths + pdf_paths + [zip_path]
-            delete_files(*all_files)
+            delete_files(*ppt_paths, *pdf_paths, zip_path)
             return response
         return send_file(zip_path, as_attachment=True, download_name="converted_presentations.zip")
+
     except Exception as e:
         return f"Error converting PPT to PDF: {str(e)}", 500
 
