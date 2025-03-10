@@ -74,7 +74,6 @@ def word_to_pdf():
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             word_file.save(word_path)
 
-            # Use LibreOffice for conversion instead of docx2pdf
             subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
 
             pdf_paths.append(output_path)
