@@ -59,6 +59,7 @@ def word_to_pdf():
     try:
         if 'file' not in request.files:
             return "No file uploaded", 400
+
         files = request.files.getlist('file')
         if not files or files[0].filename == '':
             return "No selected files", 400
@@ -75,27 +76,10 @@ def word_to_pdf():
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             word_file.save(word_path)
 
-            # Check if LibreOffice exists
-            if not os.path.exists(LIBREOFFICE_PATH):
-                alternative_paths = [
-                    "libreoffice",
-                    "/usr/local/bin/libreoffice",
-                    "/opt/libreoffice/program/soffice"
-                ]
-                for path in alternative_paths:
-                    try:
-                        subprocess.run([path, "--version"], check=True, capture_output=True)
-                        print(f"Found LibreOffice at: {path}")
-                        libreoffice_executable = path
-                        break
-                    except (subprocess.SubprocessError, FileNotFoundError):
-                        continue
-                else:
-                    return "LibreOffice not found. Please install it on the server.", 500
-            else:
-                libreoffice_executable = LIBREOFFICE_PATH
-
-            subprocess.run([libreoffice_executable, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, word_path], check=True)
+            subprocess.run([
+                "libreoffice", "--headless", "--convert-to", "pdf",
+                "--outdir", UPLOAD_FOLDER, word_path
+            ], check=True)
 
             pdf_paths.append(output_path)
             word_paths.append(word_path)
@@ -105,7 +89,9 @@ def word_to_pdf():
             def remove_file(response):
                 delete_files(word_paths[0], pdf_paths[0])
                 return response
-            return send_file(pdf_paths[0], as_attachment=True, download_name=f"{filename}.pdf")
+
+            return send_file(pdf_paths[0], as_attachment=True,
+                             download_name=f"{os.path.splitext(files[0].filename)[0]}.pdf")
 
         zip_path = os.path.join(UPLOAD_FOLDER, "converted_documents.zip")
         with zipfile.ZipFile(zip_path, 'w') as zipf:
@@ -114,8 +100,10 @@ def word_to_pdf():
 
         @after_this_request
         def remove_files(response):
-            delete_files(*word_paths, *pdf_paths, zip_path)
+            all_files = word_paths + pdf_paths + [zip_path]
+            delete_files(*all_files)
             return response
+
         return send_file(zip_path, as_attachment=True, download_name="converted_documents.zip")
 
     except Exception as e:
@@ -256,6 +244,7 @@ def ppt_to_pdf():
     try:
         if 'file' not in request.files:
             return "No file uploaded", 400
+
         files = request.files.getlist('file')
         if not files or files[0].filename == '':
             return "No selected files", 400
@@ -271,28 +260,11 @@ def ppt_to_pdf():
             ppt_path = os.path.join(UPLOAD_FOLDER, ppt_file.filename)
             output_path = os.path.join(UPLOAD_FOLDER, f"{filename}.pdf")
             ppt_file.save(ppt_path)
-            
-            # Check if LibreOffice exists - same code as in word-to-pdf for consistency
-            if not os.path.exists(LIBREOFFICE_PATH):
-                alternative_paths = [
-                    "libreoffice",
-                    "/usr/local/bin/libreoffice",
-                    "/opt/libreoffice/program/soffice"
-                ]
-                for path in alternative_paths:
-                    try:
-                        subprocess.run([path, "--version"], check=True, capture_output=True)
-                        print(f"Found LibreOffice at: {path}")
-                        libreoffice_executable = path
-                        break
-                    except (subprocess.SubprocessError, FileNotFoundError):
-                        continue
-                else:
-                    return "LibreOffice not found. Please install it on the server.", 500
-            else:
-                libreoffice_executable = LIBREOFFICE_PATH
-                
-            subprocess.run([libreoffice_executable, "--headless", "--convert-to", "pdf", "--outdir", UPLOAD_FOLDER, ppt_path], check=True)
+
+            subprocess.run([
+                "libreoffice", "--headless", "--convert-to", "pdf",
+                "--outdir", UPLOAD_FOLDER, ppt_path
+            ], check=True)
 
             ppt_paths.append(ppt_path)
             pdf_paths.append(output_path)
@@ -302,7 +274,8 @@ def ppt_to_pdf():
             def remove_file(response):
                 delete_files(ppt_paths[0], pdf_paths[0])
                 return response
-            return send_file(pdf_paths[0], as_attachment=True, download_name=f"{filename}.pdf")
+            return send_file(pdf_paths[0], as_attachment=True,
+                             download_name=f"{os.path.splitext(files[0].filename)[0]}.pdf")
 
         zip_path = os.path.join(UPLOAD_FOLDER, "converted_presentations.zip")
         with zipfile.ZipFile(zip_path, 'w') as zipf:
@@ -311,12 +284,15 @@ def ppt_to_pdf():
 
         @after_this_request
         def remove_files(response):
-            delete_files(*ppt_paths, *pdf_paths, zip_path)
+            all_files = ppt_paths + pdf_paths + [zip_path]
+            delete_files(*all_files)
             return response
+
         return send_file(zip_path, as_attachment=True, download_name="converted_presentations.zip")
 
     except Exception as e:
         return f"Error converting PPT to PDF: {str(e)}", 500
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -327,4 +303,5 @@ def server_error(error):
     return "Server error: " + str(error), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+
