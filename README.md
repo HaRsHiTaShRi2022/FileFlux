@@ -1,9 +1,3 @@
-Got it\! That's an important detail for the deployment section. I've updated the README to reflect that FileFlux is deployed on Render and adjusted the "Live Website" badge accordingly.
-
-Here's the revised README:
-
------
-
 # FileFlux
 
 **Effortless File Conversion, Secure & Free**
